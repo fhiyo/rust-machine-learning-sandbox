@@ -1,5 +1,5 @@
 use ndarray::Array1;
-use rust_machine_learning_sandbox::{gaussian, LinearRegression};
+use rust_machine_learning_sandbox::algorithm::LinearRegression;
 
 fn main() {
     run(Box::new(|v| vec![v]), "linear", "Linear");
@@ -82,4 +82,8 @@ fn plotting_ends(vs: &Vec<f64>) -> (f64, f64) {
     let min = vs.iter().fold(f64::INFINITY, |a, &b| a.min(b));
     let max = vs.iter().fold(f64::NEG_INFINITY, |a, &b| a.max(b));
     (min * 1.2, max * 1.2)
+}
+
+pub fn gaussian(x: f64, mean: f64, var: f64) -> f64 {
+    f64::exp(-(x - mean).powf(2.0) / (2.0 * var))
 }
