@@ -1,5 +1,5 @@
 use ndarray::{Array1, Array2, ArrayView1};
-use ndarray_linalg::Inverse;
+use ndarray_linalg::Solve;
 
 pub struct LinearRegression {
     coefficients: Array1<f64>,
@@ -25,8 +25,7 @@ impl LinearRegression {
         )
         .unwrap();
 
-        let moore_penrose_pseudo_inverse_matrix = phi_x.t().dot(&phi_x).inv()?.dot(&phi_x.t());
-        let w = moore_penrose_pseudo_inverse_matrix.dot(&t);
+        let w = phi_x.t().dot(&phi_x).solve(&phi_x.t().dot(&t)).unwrap();
 
         Ok(LinearRegression {
             coefficients: w,
