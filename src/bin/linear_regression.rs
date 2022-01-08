@@ -1,5 +1,5 @@
+use fhiyo_machine_learning_sandbox::algorithm::LinearRegression;
 use ndarray::Array1;
-use rust_machine_learning_sandbox::algorithm::LinearRegression;
 
 fn main() {
     run(Box::new(|v| vec![v]), "linear", "Linear");
