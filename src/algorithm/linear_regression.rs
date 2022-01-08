@@ -18,7 +18,7 @@ impl LinearRegression {
             vec
         };
 
-        let col = f(f64::NAN).len() + 1;
+        let col = phi(f64::NAN).len();
         let phi_x = Array2::from_shape_vec(
             (x.len(), col),
             x.to_vec().into_iter().flat_map(phi).collect::<Vec<_>>(),
