@@ -19,7 +19,7 @@ fn main() {
 
 fn run(f: Box<dyn Fn(f64) -> Vec<f64>>, image_name: &str, title: &str) {
     let x = Array1::from((-200..=200).map(|x| x as f64 / 50.0).collect::<Vec<_>>());
-    let t = x.clone().map(|x| x.sin());
+    let t = &x.map(|x| x.sin());
 
     let model = LinearRegression::fit(x.view(), t.view(), f).unwrap();
     let y = model.predict();
@@ -36,13 +36,8 @@ fn plot(
 ) -> Result<(), Box<dyn std::error::Error>> {
     use plotters::prelude::*;
 
-    let (x_min, x_max) = plotting_ends(&xs);
-    let (y_min, y_max) = plotting_ends(
-        &ys.iter()
-            .cloned()
-            .chain(ts.iter().cloned())
-            .collect::<Vec<_>>(),
-    );
+    let (x_min, x_max) = plotting_ends(xs.iter());
+    let (y_min, y_max) = plotting_ends(ys.iter().chain(ts.iter()));
 
     let image_path = format!("images/linear_regression/{}.png", image_name);
     let root = BitMapBackend::new(image_path.as_str(), (640, 480)).into_drawing_area();
@@ -78,9 +73,10 @@ fn plot(
     Ok(())
 }
 
-fn plotting_ends(vs: &Vec<f64>) -> (f64, f64) {
-    let min = vs.iter().fold(f64::INFINITY, |a, &b| a.min(b));
-    let max = vs.iter().fold(f64::NEG_INFINITY, |a, &b| a.max(b));
+fn plotting_ends<'a, I: Iterator<Item = &'a f64>>(vs: I) -> (f64, f64) {
+    let (min, max) = vs.fold((f64::INFINITY, f64::NEG_INFINITY), |(min, max), b| {
+        (min.min(*b), max.max(*b))
+    });
     (min * 1.2, max * 1.2)
 }
 

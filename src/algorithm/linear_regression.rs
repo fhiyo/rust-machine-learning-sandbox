@@ -59,7 +59,7 @@ mod tests {
     fn linear() {
         // y = 2x + 3
         let x = arr1(&(0..=10).map(|i| i as f64).collect::<Vec<_>>());
-        let t = x.clone().map(|f| 2.0 * f + 3.0);
+        let t = x.map(|f| 2.0 * f + 3.0);
         let model = LinearRegression::fit(x.view(), t.view(), Box::new(|v| vec![v])).unwrap();
         let predict = model.predict();
 
@@ -70,7 +70,7 @@ mod tests {
     fn quad_ols() {
         // y = 3x^2 - 2x + 10
         let x = arr1(&(-100..=100).map(|i| i as f64).collect::<Vec<_>>());
-        let t = x.clone().map(|f| 3.0 * f.powf(2.0) - 2.0 * f + 10.0);
+        let t = x.map(|f| 3.0 * f.powf(2.0) - 2.0 * f + 10.0);
         let model =
             LinearRegression::fit(x.view(), t.view(), Box::new(|v| vec![v, v.powf(2.0)])).unwrap();
         let predict = model.predict();
